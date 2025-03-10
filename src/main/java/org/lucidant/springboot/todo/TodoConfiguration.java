@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
+import org.springframework.web.service.invoker.HttpExchangeAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -33,11 +34,14 @@ public class TodoConfiguration {
 
     @Bean
     public TodoClient todoClient(WebClient webClient) {
-        final var webClientAdapter = WebClientAdapter.create(webClient);
 
-        return HttpServiceProxyFactory
-            .builder(webClientAdapter)
-            .build()
-            .createClient(TodoClient.class);
+        HttpExchangeAdapter exchangeAdapter =  WebClientAdapter.create(webClient);
+
+        var factory = HttpServiceProxyFactory
+                .builder()
+                .exchangeAdapter(exchangeAdapter)
+                .build();
+
+        return factory.createClient(TodoClient.class);
     }
 }
