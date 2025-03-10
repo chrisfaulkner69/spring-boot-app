@@ -11,7 +11,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: cimg/openjdk:21.0.0
+      - image: cimg/openjdk:21.0.6
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -28,4 +28,4 @@ jobs:
     steps:
       - checkout
 
-      - run: mvn verify
+      - run: mvn clean verify
