@@ -73,12 +73,13 @@ class TodoControllerTest {
 			.baseUrl(baseUrl)
 			.build();
 
-		final var webClientAdapter = WebClientAdapter.create(webClient);
+		var exchangeAdapter =  WebClientAdapter.create(webClient);
+		var factory = HttpServiceProxyFactory
+				.builder()
+				.exchangeAdapter(exchangeAdapter)
+				.build();
+		var todoClient = factory.createClient(TodoClient.class);
 
-		final var todoClient = HttpServiceProxyFactory
-			.builder(webClientAdapter)
-			.build()
-			.createClient(TodoClient.class);
 		controller = new TodoController(todoClient, toDoRepository);
 	}
 
